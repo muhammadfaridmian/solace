@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion';
-import { type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { motion, type HTMLMotionProps } from 'framer-motion';
+import { type ReactNode } from 'react';
 import { primaryButtonVariants, rantButtonVariants } from '../../lib/animations';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
   variant?: 'primary' | 'secondary' | 'rant' | 'icon';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;

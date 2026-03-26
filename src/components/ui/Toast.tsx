@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toastVariants } from '../../lib/animations';
 
 type ToastType = 'success' | 'warning' | 'error' | 'info';
@@ -8,10 +8,6 @@ interface Toast {
   id: string;
   message: string;
   type: ToastType;
-}
-
-interface ToastContextValue {
-  addToast: (message: string, type?: ToastType) => void;
 }
 
 let toastListener: ((toast: Toast) => void) | null = null;

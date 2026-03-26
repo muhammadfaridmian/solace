@@ -1,7 +1,7 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { pageVariants } from '../lib/animations';
-import { Phone, MessageCircle, Globe, Heart, Search, ArrowRight, ExternalLink, Shield, Sparkles } from 'lucide-react';
+import { Phone, Globe, Heart, Search, ExternalLink, Shield, Sparkles } from 'lucide-react';
 import { useStore } from '../store/useStore';
 
 type Category = 'all' | 'crisis' | 'therapy' | 'self-help';
