@@ -326,6 +326,7 @@
 html {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
+  overflow-x: hidden;
 }
 
 body {
@@ -338,6 +339,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   transition: background 2000ms ease;
+  overflow-x: hidden;
 }
 
 #root {

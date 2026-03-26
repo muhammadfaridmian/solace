@@ -187,20 +187,23 @@ export function Navigation() {
       </motion.nav>
 
       {/* ─── Mobile Nav (fixed bottom tab bar) ─── */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-bg-nav backdrop-blur-[20px] backdrop-saturate-[180%] border-t border-border-subtle z-sticky transition-colors duration-medium ease-comfort overflow-hidden">
-        <ul className="flex items-center justify-between list-none m-0 p-0 px-[2px] py-[6px] w-full max-w-full overflow-hidden">
+      <nav 
+        className="lg:hidden fixed bottom-0 left-0 right-0 bg-bg-nav backdrop-blur-[20px] backdrop-saturate-[180%] border-t border-border-subtle transition-colors duration-medium ease-comfort"
+        style={{ zIndex: 9999 }}
+      >
+        <ul className="flex items-center justify-evenly list-none m-0 p-0 py-[6px] w-full">
           {NAV_LINKS.map((link) => {
             const isActive = location.pathname === link.path;
             return (
-              <li key={link.path} className="flex-1 min-w-0 max-w-[14.28%]">
+              <li key={link.path}>
                 <NavLink
                   to={link.path}
-                  className="flex flex-col items-center gap-[1px] no-underline px-[2px] py-[4px] rounded-[8px] transition-colors duration-150"
+                  className="flex flex-col items-center gap-[1px] no-underline px-[6px] py-[4px] rounded-[8px] transition-colors duration-150"
                 >
                   <span className={`transition-colors duration-150 ${isActive ? 'text-accent-warm' : 'text-text-muted'}`}>
                     {navIcons[link.path]}
                   </span>
-                  <span className={`font-body text-[8px] leading-tight transition-colors duration-150 truncate max-w-full text-center ${isActive ? 'text-accent-warm font-medium' : 'text-text-muted'}`}>
+                  <span className={`font-body text-[9px] leading-tight transition-colors duration-150 ${isActive ? 'text-accent-warm font-medium' : 'text-text-muted'}`}>
                     {navLabels[link.path]}
                   </span>
                   {isActive && (
@@ -215,30 +218,30 @@ export function Navigation() {
             );
           })}
           {/* User/sign-out tab */}
-          <li className="flex-1 min-w-0 max-w-[14.28%]">
+          <li>
             <button
               onClick={handleSignOut}
-              className="w-full flex flex-col items-center gap-[1px] px-[2px] py-[4px] rounded-[8px] transition-colors duration-150 bg-transparent border-none cursor-pointer"
+              className="flex flex-col items-center gap-[1px] px-[6px] py-[4px] rounded-[8px] transition-colors duration-150 bg-transparent border-none cursor-pointer"
             >
               <span className="w-[18px] h-[18px] rounded-full bg-accent-sage flex items-center justify-center text-white font-display text-[9px]">
                 {displayName.charAt(0).toUpperCase()}
               </span>
-              <span className="font-body text-[8px] leading-tight text-text-muted truncate">
+              <span className="font-body text-[9px] leading-tight text-text-muted">
                 Out
               </span>
             </button>
           </li>
           {/* Theme toggle tab */}
-          <li className="flex-1 min-w-0 max-w-[14.28%]">
+          <li>
             <button
               onClick={toggleTheme}
-              className="w-full flex flex-col items-center gap-[1px] px-[2px] py-[4px] rounded-[8px] transition-colors duration-150 bg-transparent border-none cursor-pointer"
+              className="flex flex-col items-center gap-[1px] px-[6px] py-[4px] rounded-[8px] transition-colors duration-150 bg-transparent border-none cursor-pointer"
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
               <span className="text-text-muted">
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
               </span>
-              <span className="font-body text-[8px] leading-tight text-text-muted">
+              <span className="font-body text-[9px] leading-tight text-text-muted">
                 {theme === 'dark' ? 'Light' : 'Dark'}
               </span>
             </button>
