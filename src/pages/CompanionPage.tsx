@@ -913,7 +913,7 @@ function ChatSidebar({
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="fixed left-0 top-0 bottom-0 w-[270px] bg-bg-card border-r border-border-subtle z-[300] flex flex-col lg:hidden"
+            className="fixed left-0 top-0 bottom-0 w-[270px] bg-bg-primary border-r border-border-subtle z-[300] flex flex-col lg:hidden"
           >
             {/* Mobile sidebar header */}
             <div className="flex items-center justify-between px-[16px] py-[14px] border-b border-border-subtle flex-shrink-0">
