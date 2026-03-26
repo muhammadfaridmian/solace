@@ -1,0 +1,527 @@
+/* @tailwind base; */
+/* @tailwind components; */
+/* @tailwind utilities; */
+/* @tailwind base; */
+/* @tailwind components; */
+/* @tailwind utilities; */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* ================================================================
+   SOLACE DESIGN SYSTEM — ROOT TOKENS
+   ================================================================ */
+
+:root {
+  /* ── COLORS — LIGHT MODE (DEFAULT) ── */
+
+  /* Backgrounds — warm parchment with soul */
+  --color-bg-primary: #f0e8dc;
+  --color-bg-secondary: #e6dccf;
+  --color-bg-card: rgba(107, 90, 128, 0.07);
+  --color-bg-card-hover: rgba(107, 90, 128, 0.11);
+  --color-bg-overlay: rgba(240, 232, 220, 0.94);
+  --color-bg-input: rgba(255, 255, 255, 0.55);
+  --color-bg-input-focus: rgba(255, 255, 255, 0.8);
+  --color-bg-nav: rgba(240, 232, 220, 0.88);
+
+  /* Text — deep plum-tinted indigo */
+  --color-text-primary: #2a2035;
+  --color-text-secondary: #584770;
+  --color-text-placeholder: rgba(88, 71, 112, 0.42);
+  --color-text-on-cta: #f0e8dc;
+  --color-text-muted: rgba(42, 32, 53, 0.38);
+  --color-text-link: #a8553f;
+
+  /* Accent — deep, saturated, soulful */
+  --color-accent-warm: #a8553f;
+  --color-accent-warm-dark: #8e4530;
+  --color-accent-rose: #964e5e;
+  --color-accent-sage: #457358;
+  --color-accent-lavender: #624e78;
+
+  /* Borders — soft lavender tints */
+  --color-border-subtle: rgba(107, 90, 128, 0.10);
+  --color-border-medium: rgba(107, 90, 128, 0.18);
+  --color-border-focus: rgba(168, 85, 63, 0.35);
+  --color-border-card-hover: rgba(168, 85, 63, 0.20);
+  --color-border-sage: rgba(69, 115, 88, 0.28);
+
+  /* Surfaces — antique warmth */
+  --color-surface-storm: #bfb5a8;
+  --color-surface-deep: #d4cbbe;
+
+  /* Emotion States — deep resonant tones */
+  --color-emotion-angry: #964e5e;
+  --color-emotion-sad: #624e78;
+  --color-emotion-anxious: #a8553f;
+  --color-emotion-numb: #736d88;
+  --color-emotion-calm: #457358;
+  --color-emotion-joy: #a87e2a;
+  --color-emotion-overwhelmed: #654098;
+  --color-emotion-exhausted: #645648;
+  --color-emotion-frustrated: #a8422a;
+  --color-emotion-confused: #506490;
+  --color-emotion-hopeful: #3d8568;
+  --color-emotion-lonely: #4a5d75;
+  --color-emotion-stressed: #bf5b30;
+  --color-emotion-lost: #5b5066;
+  --color-emotion-grateful: #c29238;
+  --color-emotion-proud: #8a4f63;
+  --color-emotion-insecure: #5c5446;
+  --color-emotion-excited: #d68c45;
+  --color-emotion-restless: #b08d55;
+  --color-emotion-panicked: #a63a50;
+  --color-emotion-inspired: #7a6590;
+  --color-emotion-loved: #c07a88;
+  --color-emotion-peaceful: #7aa1ba;
+  --color-emotion-passionate: #b94e48;
+  --color-emotion-empowered: #d4a373;
+  --color-emotion-euphoric: #e3b505;
+
+  /* Semantic — vivid and clear */
+  --color-success: #457358;
+  --color-success-bg: rgba(69, 115, 88, 0.14);
+  --color-warning: #a8553f;
+  --color-warning-bg: rgba(168, 85, 63, 0.14);
+  --color-error: #964e5e;
+  --color-error-bg: rgba(150, 78, 94, 0.14);
+  --color-crisis: #b83838;
+  --color-crisis-bg: rgba(184, 56, 56, 0.12);
+
+  /* Interactive states */
+  --color-hover-bg: rgba(107, 90, 128, 0.07);
+  --color-hover-border: rgba(107, 90, 128, 0.28);
+  --color-focus-ring: rgba(168, 85, 63, 0.42);
+  --color-focus-ring-secondary: rgba(107, 90, 128, 0.20);
+  --color-slider-track: rgba(107, 90, 128, 0.24);
+  --color-surface-glass: rgba(107, 90, 128, 0.05);
+  --color-surface-glass-heavy: rgba(107, 90, 128, 0.10);
+  --color-spinner-track: rgba(107, 90, 128, 0.20);
+  --color-spinner-active: var(--color-text-primary);
+  --color-toast-bg: rgba(240, 232, 220, 0.96);
+  --color-toggle-off: rgba(107, 90, 128, 0.32);
+  --color-skeleton-from: rgba(107, 90, 128, 0.06);
+  --color-skeleton-via: rgba(107, 90, 128, 0.12);
+  --color-progress-track: rgba(107, 90, 128, 0.22);
+  --color-scrollbar: rgba(107, 90, 128, 0.22);
+  --color-surface-sage-light: rgba(69, 115, 88, 0.14);
+  --color-surface-warm-light: rgba(168, 85, 63, 0.12);
+  --color-surface-rose-light: rgba(150, 78, 94, 0.12);
+  --color-surface-lavender-light: rgba(98, 78, 120, 0.12);
+
+  /* Glows — warm, visible, atmospheric */
+  --glow-warm: 0 0 40px rgba(168, 85, 63, 0.22), 0 0 100px rgba(168, 85, 63, 0.08);
+  --glow-rose: 0 0 40px rgba(150, 78, 94, 0.22), 0 0 100px rgba(150, 78, 94, 0.08);
+  --glow-sage: 0 0 40px rgba(69, 115, 88, 0.22), 0 0 100px rgba(69, 115, 88, 0.08);
+
+  /* ── TYPOGRAPHY ── */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --text-3xs: 0.563rem;
+  --text-2xs: 0.688rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.333rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2.25rem;
+  --text-3xl: 3rem;
+
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.75;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: +0.05em;
+  --tracking-wider: +0.1em;
+  --tracking-widest: +0.15em;
+
+  /* ── SPACING — 8px Grid Base ── */
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 128px;
+
+  /* ── BORDER RADIUS ── */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
+
+  /* ── SHADOWS — warm lavender-tinted depth ── */
+  --shadow-xs: 0 2px 8px rgba(98, 78, 120, 0.08);
+  --shadow-sm: 0 4px 16px rgba(98, 78, 120, 0.10);
+  --shadow-md: 0 8px 32px rgba(98, 78, 120, 0.12);
+  --shadow-lg: 0 20px 60px rgba(98, 78, 120, 0.14);
+  --shadow-xl: 0 24px 80px rgba(98, 78, 120, 0.18);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  --shadow-inset-md: inset 0 2px 8px rgba(98, 78, 120, 0.08);
+  --shadow-cta-default: 0 4px 24px rgba(168, 85, 63, 0.25), 0 0 60px rgba(168, 85, 63, 0.08);
+  --shadow-cta-hover: 0 8px 40px rgba(168, 85, 63, 0.35), 0 0 80px rgba(168, 85, 63, 0.12);
+  --shadow-cta-rant: 0 8px 40px rgba(150, 78, 94, 0.28),
+    0 0 80px rgba(168, 85, 63, 0.12);
+
+  /* ── MOTION ── */
+  --ease-comfort: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-settle: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-release: cubic-bezier(0.55, 0.06, 0.68, 0.19);
+  --ease-breathe: cubic-bezier(0.37, 0, 0.63, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  --duration-micro: 200ms;
+  --duration-small: 350ms;
+  --duration-medium: 500ms;
+  --duration-large: 700ms;
+  --duration-ambient: 8000ms;
+  --duration-dissolve: 3000ms;
+
+  /* ── LAYOUT ── */
+  --max-width-page: 1200px;
+  --max-width-content: 720px;
+  --max-width-narrow: 520px;
+  --max-width-text: 65ch;
+
+  --nav-height-desktop: 64px;
+  --nav-height-mobile: 56px;
+
+  --z-below: -1;
+  --z-base: 0;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-crisis: 999;
+  --z-texture: 9999;
+}
+
+/* ── DARK MODE ── */
+[data-theme='dark'] {
+  --color-bg-primary: #1a1a2e;
+  --color-bg-secondary: #16213e;
+  --color-bg-card: rgba(65, 67, 92, 0.12);
+  --color-bg-card-hover: rgba(65, 67, 92, 0.18);
+  --color-bg-overlay: rgba(10, 10, 20, 0.95);
+  --color-bg-input: rgba(26, 26, 46, 0.8);
+  --color-bg-input-focus: rgba(26, 26, 46, 0.95);
+  --color-bg-nav: rgba(26, 26, 46, 0.85);
+
+  --color-text-primary: #f0e6d3;
+  --color-text-secondary: #7b6d8d;
+  --color-text-placeholder: rgba(123, 109, 141, 0.5);
+  --color-text-on-cta: #1a1a2e;
+  --color-text-muted: rgba(240, 230, 211, 0.4);
+  --color-text-link: #e8a87c;
+
+  --color-accent-warm: #e8a87c;
+  --color-accent-warm-dark: #d4956a;
+  --color-accent-rose: #c97b84;
+  --color-accent-sage: #85b79d;
+  --color-accent-lavender: #7b6d8d;
+
+  --color-border-subtle: rgba(240, 230, 211, 0.06);
+  --color-border-medium: rgba(240, 230, 211, 0.12);
+  --color-border-focus: rgba(232, 168, 124, 0.3);
+  --color-border-card-hover: rgba(232, 168, 124, 0.15);
+  --color-border-sage: rgba(133, 183, 157, 0.3);
+
+  --color-surface-storm: #41435c;
+  --color-surface-deep: #0d0d1a;
+
+  --color-emotion-angry: #c97b84;
+  --color-emotion-sad: #7b6d8d;
+  --color-emotion-anxious: #e8a87c;
+  --color-emotion-numb: #41435c;
+  --color-emotion-calm: #85b79d;
+  --color-emotion-joy: #f0c57a;
+  --color-emotion-overwhelmed: #9b7bc8;
+  --color-emotion-exhausted: #a69882;
+  --color-emotion-frustrated: #e08060;
+  --color-emotion-confused: #8da4cc;
+  --color-emotion-hopeful: #7cc4a0;
+  --color-emotion-lonely: #6b84a3;
+  --color-emotion-stressed: #e07a50;
+  --color-emotion-lost: #8a7d99;
+  --color-emotion-grateful: #dec07b;
+  --color-emotion-proud: #ba758c;
+  --color-emotion-insecure: #8f8576;
+  --color-emotion-excited: #f0ab65;
+
+  --color-success: #85b79d;
+  --color-success-bg: rgba(133, 183, 157, 0.1);
+  --color-warning: #e8a87c;
+  --color-warning-bg: rgba(232, 168, 124, 0.1);
+  --color-error: #c97b84;
+  --color-error-bg: rgba(201, 123, 132, 0.1);
+  --color-crisis: #ff6b6b;
+  --color-crisis-bg: rgba(255, 107, 107, 0.1);
+
+  --color-hover-bg: rgba(240, 230, 211, 0.06);
+  --color-hover-border: rgba(240, 230, 211, 0.50);
+  --color-focus-ring: rgba(232, 168, 124, 0.50);
+  --color-focus-ring-secondary: rgba(240, 230, 211, 0.30);
+  --color-slider-track: rgba(123, 109, 141, 0.30);
+  --color-surface-glass: rgba(65, 67, 92, 0.08);
+  --color-surface-glass-heavy: rgba(65, 67, 92, 0.20);
+  --color-spinner-track: rgba(26, 26, 46, 0.30);
+  --color-spinner-active: #1A1A2E;
+  --color-toast-bg: rgba(65, 67, 92, 0.90);
+  --color-toggle-off: rgba(65, 67, 92, 0.60);
+  --color-skeleton-from: rgba(65, 67, 92, 0.12);
+  --color-skeleton-via: rgba(65, 67, 92, 0.22);
+  --color-progress-track: rgba(65, 67, 92, 0.60);
+  --color-scrollbar: rgba(123, 109, 141, 0.30);
+  --color-surface-sage-light: rgba(133, 183, 157, 0.12);
+  --color-surface-warm-light: rgba(232, 168, 124, 0.10);
+  --color-surface-rose-light: rgba(201, 123, 132, 0.10);
+  --color-surface-lavender-light: rgba(123, 109, 141, 0.10);
+
+  --glow-warm: 0 0 40px rgba(232, 168, 124, 0.15);
+  --glow-rose: 0 0 40px rgba(201, 123, 132, 0.15);
+  --glow-sage: 0 0 40px rgba(133, 183, 157, 0.15);
+
+  --shadow-xs: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 24px 80px rgba(0, 0, 0, 0.4);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-inset-md: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-cta-default: 0 4px 24px rgba(232, 168, 124, 0.2);
+  --shadow-cta-hover: 0 8px 32px rgba(232, 168, 124, 0.35);
+  --shadow-cta-rant: 0 8px 40px rgba(201, 123, 132, 0.3),
+    0 0 80px rgba(232, 168, 124, 0.1);
+}
+
+/* ── MOOD BACKGROUNDS ── */
+
+/* ── BASE STYLES ── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  transition: background 2000ms ease;
+}
+
+#root {
+  min-height: 100vh;
+  transition: background 2000ms ease;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw + 0.75rem, 3rem);
+  line-height: clamp(2.5rem, 4.5vw + 0.75rem, 3.5rem);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3vw + 0.5rem, 2.25rem);
+  line-height: clamp(2rem, 3.5vw + 0.5rem, 2.75rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2vw + 0.25rem, 1.5rem);
+  line-height: clamp(1.75rem, 2.5vw + 0.25rem, 2rem);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.01em;
+}
+
+/* p max-width removed — was causing centering issues globally */
+
+/* ── SCREEN READER ONLY ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── CUSTOM SCROLLBAR ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(98, 78, 120, 0.24);
+  border-radius: var(--radius-full);
+}
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background-color: rgba(123, 109, 141, 0.3);
+}
+
+/* ── Light mode atmospheric overlays ── */
+:root:not([data-theme='dark']) body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(ellipse 120% 80% at 50% 50%, transparent 40%, rgba(98, 78, 120, 0.06) 100%);
+  mix-blend-mode: multiply;
+}
+
+:root:not([data-theme='dark']) body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* ── Light mode card depth ── */
+:root:not([data-theme='dark']) .bg-bg-card {
+  background: linear-gradient(135deg, rgba(107, 90, 128, 0.06) 0%, rgba(168, 85, 63, 0.03) 100%);
+  box-shadow: 0 1px 3px rgba(98, 78, 120, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+:root:not([data-theme='dark']) .bg-bg-secondary {
+  background: linear-gradient(135deg, rgba(230, 220, 207, 0.95) 0%, rgba(212, 203, 190, 0.85) 100%);
+  box-shadow: 0 1px 2px rgba(98, 78, 120, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Light mode nav warmth */
+:root:not([data-theme='dark']) .bg-bg-nav {
+  background: linear-gradient(180deg, rgba(240, 232, 220, 0.94) 0%, rgba(230, 220, 207, 0.90) 100%);
+  box-shadow: 0 4px 20px rgba(98, 78, 120, 0.08), 0 1px 3px rgba(98, 78, 120, 0.04);
+}
+
+/* Light mode input warmth */
+:root:not([data-theme='dark']) .bg-bg-input {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(245, 239, 230, 0.5) 100%);
+  box-shadow: inset 0 1px 3px rgba(98, 78, 120, 0.05);
+}
+
+:root:not([data-theme='dark']) .bg-bg-input-focus,
+:root:not([data-theme='dark']) .focus\:bg-bg-input-focus:focus {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(250, 245, 238, 0.8) 100%);
+}
+
+/* Light mode dividers with gradient */
+:root:not([data-theme='dark']) .bg-border-medium {
+  background: linear-gradient(90deg, transparent, rgba(98, 78, 120, 0.15), transparent);
+}
+
+/* Light mode heading glow */
+:root:not([data-theme='dark']) h1 {
+  text-shadow: 0 0 80px rgba(168, 85, 63, 0.08);
+}
+
+:root:not([data-theme='dark']) h2 {
+  text-shadow: 0 0 60px rgba(98, 78, 120, 0.06);
+}
+
+/* Light mode blockquote styling */
+:root:not([data-theme='dark']) blockquote {
+  text-shadow: 0 1px 2px rgba(42, 32, 53, 0.06);
+}
+
+/* Light mode button depth */
+:root:not([data-theme='dark']) .bg-accent-warm {
+  box-shadow: 0 4px 24px rgba(168, 85, 63, 0.25), 0 0 60px rgba(168, 85, 63, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+:root:not([data-theme='dark']) .bg-accent-sage {
+  box-shadow: 0 2px 12px rgba(69, 115, 88, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Light mode selection color */
+:root:not([data-theme='dark']) ::selection {
+  background: rgba(168, 85, 63, 0.15);
+  color: #2a2035;
+}
+
+/* Light mode focus states warmth */
+:root:not([data-theme='dark']) input:focus,
+:root:not([data-theme='dark']) textarea:focus {
+  box-shadow: 0 0 0 3px rgba(168, 85, 63, 0.12), 0 4px 16px rgba(98, 78, 120, 0.06);
+}
+
+/* Light mode links */
+:root:not([data-theme='dark']) a:hover {
+  text-shadow: 0 0 20px rgba(168, 85, 63, 0.12);
+}
+
+/* Light mode horizontal rules */
+:root:not([data-theme='dark']) hr {
+  border-image: linear-gradient(90deg, transparent, rgba(98, 78, 120, 0.15), transparent) 1;
+}
+
+/* Companion page height — full viewport on desktop, reduced on mobile for bottom nav */
+#companion-container {
+  height: 100vh;
+}
+@media (max-width: 1023px) {
+  #companion-container {
+    height: calc(100vh - 56px);
+  }
+}
