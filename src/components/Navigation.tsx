@@ -228,6 +228,21 @@ export function Navigation() {
               </span>
             </button>
           </li>
+          {/* Theme toggle tab */}
+          <li>
+            <button
+              onClick={toggleTheme}
+              className="flex flex-col items-center gap-[2px] px-[8px] py-[4px] rounded-[8px] transition-colors duration-150 bg-transparent border-none cursor-pointer"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              <span className="text-text-muted">
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </span>
+              <span className="font-body text-[10px] leading-tight text-text-muted">
+                {theme === 'dark' ? 'Light' : 'Dark'}
+              </span>
+            </button>
+          </li>
         </ul>
       </nav>
     </>
