@@ -15,7 +15,7 @@ app.use(express.json({ limit: '100mb' }));
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const TEXT_MODEL = process.env.AI_MODEL || 'deepseek/deepseek-chat:free';
+const TEXT_MODEL = process.env.AI_MODEL || 'stepfun/step-3.5-flash:free';
 const VISION_MODEL = process.env.AI_VISION_MODEL || 'gemini-1.5-flash';
 
 console.log('─── SOLACE SERVER STARTING (CLEAN SLATE) ───');
