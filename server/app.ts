@@ -2,9 +2,21 @@ import 'dotenv/config';
 import express from 'express';
 import crypto from 'crypto';
 import cors from 'cors';
+import { createClient } from '@supabase/supabase-js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// ─── SUPABASE ADMIN CLIENT ───
+const SUPABASE_URL = process.env.SUPABASE_URL || '';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
+const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+});
 
 // ─── CONFIGURATION ───
 app.use(cors({
@@ -337,6 +349,52 @@ app.post('/api/chat', async (req, res) => {
   } catch (error: any) {
     console.error('[Server Error]', error);
     res.status(500).json({ error: error.message || 'Internal Server Error' });
+  }
+});
+
+// ─── DELETE ACCOUNT ENDPOINT ───
+app.post('/api/delete-account', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    
+    if (!userId) {
+      res.status(400).json({ error: 'User ID required' });
+      return;
+    }
+
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('[Delete Account] Supabase admin credentials not configured');
+      res.status(500).json({ error: 'Server not configured for account deletion' });
+      return;
+    }
+
+    console.log(`[Delete Account] Deleting user: ${userId}`);
+
+    // Delete user's journal entries first
+    const { error: entriesError } = await supabaseAdmin
+      .from('journal_entries')
+      .delete()
+      .eq('user_id', userId);
+
+    if (entriesError) {
+      console.warn('[Delete Account] Error deleting entries:', entriesError);
+    }
+
+    // Delete the user account using admin API
+    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId);
+
+    if (deleteError) {
+      console.error('[Delete Account] Error deleting user:', deleteError);
+      res.status(500).json({ error: deleteError.message });
+      return;
+    }
+
+    console.log(`[Delete Account] Successfully deleted user: ${userId}`);
+    res.json({ success: true });
+
+  } catch (error: any) {
+    console.error('[Delete Account Error]', error);
+    res.status(500).json({ error: error.message || 'Failed to delete account' });
   }
 });
 

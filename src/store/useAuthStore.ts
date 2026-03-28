@@ -107,14 +107,18 @@ export const useAuthStore = create<AuthState>()((set) => ({
 
       const userId = user.id;
 
-      // Delete user's journal entries first
-      const { error: deleteEntriesError } = await supabase
-        .from('journal_entries')
-        .delete()
-        .eq('user_id', userId);
+      // Call the backend to delete the account (uses admin API)
+      const API_URL = import.meta.env.VITE_API_URL || 'https://solace-production-7876.up.railway.app';
+      const response = await fetch(`${API_URL}/api/delete-account`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
 
-      if (deleteEntriesError) {
-        console.error('Error deleting entries:', deleteEntriesError);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        return { error: data.error || 'Failed to delete account' };
       }
 
       // Clear localStorage data for this user
@@ -127,7 +131,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
       }
       keysToRemove.forEach(key => localStorage.removeItem(key));
 
-      // Sign out the user
+      // Sign out locally
       await supabase.auth.signOut();
       set({ user: null, session: null });
 
