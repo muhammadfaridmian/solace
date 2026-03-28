@@ -93,9 +93,16 @@ export const useStore = create<BreatheState>()(
       fetchEntries: async () => {
         set({ isLoading: true });
         try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) {
+            set({ journalEntries: [], isLoading: false });
+            return;
+          }
+
           const { data, error } = await supabase
             .from('journal_entries')
             .select('*')
+            .eq('user_id', user.id)
             .order('created_at', { ascending: false });
 
           if (error) throw error;

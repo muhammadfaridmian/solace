@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Trash2, Shield, RotateCcw, Pencil, X, Check, Clock, MessageCircle, Settings2, ImagePlus, Plus, PanelLeftOpen, PanelLeftClose, MoreHorizontal } from 'lucide-react';
 import { useStore } from '../store/useStore';
+import { useAuthStore } from '../store/useAuthStore';
 
 /* ── Solara Logo ── */
 function SolaraLogo({ className = '' }: { className?: string }) {
@@ -518,8 +519,12 @@ function WelcomeScreen({ onSuggestion }: { onSuggestion: (text: string) => void 
 }
 
 // ─── Session persistence helpers ───
-const SESSIONS_KEY = 'breathe-companion-sessions';
-const ACTIVE_SESSION_KEY = 'breathe-companion-active-session';
+function getSessionsKey(userId: string | undefined) {
+  return userId ? `breathe-companion-sessions-${userId}` : 'breathe-companion-sessions';
+}
+function getActiveSessionKey(userId: string | undefined) {
+  return userId ? `breathe-companion-active-session-${userId}` : 'breathe-companion-active-session';
+}
 
 function generateSessionName(messages: ChatMessage[]): string {
   const firstUserMsg = messages.find((m) => m.role === 'user');
@@ -528,28 +533,11 @@ function generateSessionName(messages: ChatMessage[]): string {
   return text.length < firstUserMsg.content.length ? `${text}...` : text;
 }
 
-function loadSessions(): ChatSession[] {
+function loadSessions(userId: string | undefined): ChatSession[] {
   try {
+    const SESSIONS_KEY = getSessionsKey(userId);
     const raw = localStorage.getItem(SESSIONS_KEY);
     if (!raw) {
-      // Migrate old single-chat format
-      const oldChat = localStorage.getItem('breathe-companion-chat');
-      if (oldChat) {
-        const oldMessages = JSON.parse(oldChat) as ChatMessage[];
-        if (oldMessages.length > 0) {
-          const session: ChatSession = {
-            id: crypto.randomUUID(),
-            name: generateSessionName(oldMessages),
-            messages: oldMessages,
-            createdAt: oldMessages[0]?.timestamp || new Date().toISOString(),
-            updatedAt: oldMessages[oldMessages.length - 1]?.timestamp || new Date().toISOString(),
-          };
-          localStorage.setItem(SESSIONS_KEY, JSON.stringify([session]));
-          localStorage.setItem(ACTIVE_SESSION_KEY, session.id);
-          localStorage.removeItem('breathe-companion-chat');
-          return [session];
-        }
-      }
       return [];
     }
     return JSON.parse(raw);
@@ -558,8 +546,9 @@ function loadSessions(): ChatSession[] {
   }
 }
 
-function saveSessions(sessions: ChatSession[]) {
+function saveSessions(sessions: ChatSession[], userId: string | undefined) {
   try {
+    const SESSIONS_KEY = getSessionsKey(userId);
     // Strip large images before saving
     const toSave = sessions.map((s) => ({
       ...s,
@@ -570,12 +559,14 @@ function saveSessions(sessions: ChatSession[]) {
     }));
     localStorage.setItem(SESSIONS_KEY, JSON.stringify(toSave));
   } catch {
+    const SESSIONS_KEY = getSessionsKey(userId);
     try { localStorage.removeItem(SESSIONS_KEY); } catch { /* ignore */ }
   }
 }
 
-function loadActiveSessionId(): string | null {
+function loadActiveSessionId(userId: string | undefined): string | null {
   try {
+    const ACTIVE_SESSION_KEY = getActiveSessionKey(userId);
     return localStorage.getItem(ACTIVE_SESSION_KEY);
   } catch {
     return null;
@@ -986,16 +977,30 @@ function ChatSidebar({
 export function CompanionPage() {
   const theme = useStore((s) => s.theme);
   const isLight = theme !== 'dark';
+  const user = useAuthStore((s) => s.user);
+  const userId = user?.id;
 
   // ─── Session management ───
-  const [sessions, setSessions] = useState<ChatSession[]>(loadSessions);
+  const [sessions, setSessions] = useState<ChatSession[]>(() => loadSessions(userId));
   const [activeSessionId, setActiveSessionId] = useState<string | null>(() => {
-    const savedId = loadActiveSessionId();
-    const loaded = loadSessions();
+    const savedId = loadActiveSessionId(userId);
+    const loaded = loadSessions(userId);
     if (savedId && loaded.some((s) => s.id === savedId)) return savedId;
     return loaded.length > 0 ? loaded[0].id : null;
   });
   const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 1024);
+
+  // Reload sessions when user changes
+  useEffect(() => {
+    const loaded = loadSessions(userId);
+    setSessions(loaded);
+    const savedId = loadActiveSessionId(userId);
+    if (savedId && loaded.some((s) => s.id === savedId)) {
+      setActiveSessionId(savedId);
+    } else {
+      setActiveSessionId(loaded.length > 0 ? loaded[0].id : null);
+    }
+  }, [userId]);
 
   // Ref to always have the latest activeSessionId (avoids stale closures)
   const activeSessionIdRef = useRef<string | null>(activeSessionId);
@@ -1034,7 +1039,8 @@ export function CompanionPage() {
   const [showSettings, setShowSettings] = useState(false);
   const [personality, setPersonality] = useState<Personality>(() => {
     try {
-      return (localStorage.getItem('breathe-companion-personality') as Personality) || 'balanced';
+      const key = userId ? `breathe-companion-personality-${userId}` : 'breathe-companion-personality';
+      return (localStorage.getItem(key) as Personality) || 'balanced';
     } catch {
       return 'balanced';
     }
@@ -1048,20 +1054,22 @@ export function CompanionPage() {
 
   // Persist personality
   useEffect(() => {
-    localStorage.setItem('breathe-companion-personality', personality);
-  }, [personality]);
+    const key = userId ? `breathe-companion-personality-${userId}` : 'breathe-companion-personality';
+    localStorage.setItem(key, personality);
+  }, [personality, userId]);
 
   // Persist sessions to localStorage
   useEffect(() => {
-    saveSessions(sessions);
-  }, [sessions]);
+    saveSessions(sessions, userId);
+  }, [sessions, userId]);
 
   // Persist active session ID
   useEffect(() => {
     if (activeSessionId) {
+      const ACTIVE_SESSION_KEY = getActiveSessionKey(userId);
       localStorage.setItem(ACTIVE_SESSION_KEY, activeSessionId);
     }
-  }, [activeSessionId]);
+  }, [activeSessionId, userId]);
 
   // Auto-scroll to bottom
   useEffect(() => {
