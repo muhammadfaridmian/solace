@@ -54,16 +54,20 @@ export function Navigation() {
 
   const handleSignOut = async () => {
     setUserMenuOpen(false);
+    setMobileMenuOpen(false);
     await signOut();
-    navigate('/login');
+    window.location.href = '/login';
   };
 
   const handleDeleteAccount = async () => {
     setIsDeleting(true);
     const { error } = await deleteAccount();
     setIsDeleting(false);
+    setUserMenuOpen(false);
+    setMobileMenuOpen(false);
+    setShowDeleteConfirm(false);
     if (!error) {
-      navigate('/login');
+      window.location.href = '/login';
     }
   };
 

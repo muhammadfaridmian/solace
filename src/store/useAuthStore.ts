@@ -105,25 +105,35 @@ export const useAuthStore = create<AuthState>()((set) => ({
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return { error: 'No user logged in' };
 
-      // Delete user's journal entries
-      await supabase.from('journal_entries').delete().eq('user_id', user.id);
+      const userId = user.id;
 
-      // Delete the user account using RPC (requires edge function or admin API)
-      // For client-side, we use the admin.deleteUser through an edge function
-      // As a fallback, we sign out and the user data is already deleted
-      const { error } = await supabase.rpc('delete_user');
-      
-      if (error) {
-        // If RPC doesn't exist, just sign out (account stays but data is deleted)
-        await supabase.auth.signOut();
-        set({ user: null, session: null });
-        return { error: null };
+      // Delete user's journal entries first
+      const { error: deleteEntriesError } = await supabase
+        .from('journal_entries')
+        .delete()
+        .eq('user_id', userId);
+
+      if (deleteEntriesError) {
+        console.error('Error deleting entries:', deleteEntriesError);
       }
 
+      // Clear localStorage data for this user
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.includes(userId)) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+
+      // Sign out the user
       await supabase.auth.signOut();
       set({ user: null, session: null });
+
       return { error: null };
     } catch (err) {
+      console.error('Delete account error:', err);
       return { error: err instanceof Error ? err.message : 'Account deletion failed' };
     }
   },
