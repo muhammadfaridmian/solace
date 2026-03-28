@@ -58,29 +58,25 @@ export function Navigation() {
     window.location.href = '/login';
   };
 
-  const handleDeleteAccount = async () => {
+  const handleDeleteAccount = () => {
     if (isDeleting) return; // Prevent double-click
     setIsDeleting(true);
     
-    // Close menus first to prevent UI issues
-    setUserMenuOpen(false);
-    setMobileMenuOpen(false);
-    
-    try {
-      const result = await deleteAccount();
+    // Run delete asynchronously but don't await - let the redirect happen
+    deleteAccount().then((result) => {
       if (result.error) {
         alert('Delete failed: ' + result.error);
         setIsDeleting(false);
         setShowDeleteConfirm(false);
-        return;
+      } else {
+        // Force full page reload to login
+        window.location.replace('/login');
       }
-      // Force full page reload to login
-      window.location.replace('/login');
-    } catch (err) {
+    }).catch((err) => {
       alert('Delete error: ' + (err instanceof Error ? err.message : 'Unknown error'));
       setIsDeleting(false);
       setShowDeleteConfirm(false);
-    }
+    });
   };
 
   const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User';
@@ -226,14 +222,16 @@ export function Navigation() {
                       <p className="font-body text-[11px] text-text-secondary mb-[8px]">Are you sure? This cannot be undone.</p>
                       <div className="flex gap-[8px]">
                         <button
-                          onClick={(e) => { e.stopPropagation(); handleDeleteAccount(); }}
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDeleteAccount(); }}
+                          type="button"
                           disabled={isDeleting}
                           className="flex-1 py-[6px] rounded-[6px] font-body text-[12px] bg-semantic-error text-white border-none cursor-pointer hover:brightness-110 transition-all disabled:opacity-50"
                         >
                           {isDeleting ? 'Deleting...' : 'Yes, delete'}
                         </button>
                         <button
-                          onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(false); }}
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowDeleteConfirm(false); }}
+                          type="button"
                           className="flex-1 py-[6px] rounded-[6px] font-body text-[12px] bg-bg-secondary text-text-secondary border border-border-subtle cursor-pointer hover:bg-bg-card transition-all"
                         >
                           Cancel
@@ -325,14 +323,16 @@ export function Navigation() {
                       <p className="font-body text-[10px] text-text-secondary mb-[8px]">Are you sure? This cannot be undone.</p>
                       <div className="flex gap-[6px]">
                         <button
-                          onClick={(e) => { e.stopPropagation(); handleDeleteAccount(); }}
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDeleteAccount(); }}
+                          type="button"
                           disabled={isDeleting}
                           className="flex-1 py-[6px] rounded-[6px] font-body text-[11px] bg-semantic-error text-white border-none cursor-pointer hover:brightness-110 transition-all disabled:opacity-50"
                         >
                           {isDeleting ? 'Deleting...' : 'Yes, delete'}
                         </button>
                         <button
-                          onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(false); }}
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowDeleteConfirm(false); }}
+                          type="button"
                           className="flex-1 py-[6px] rounded-[6px] font-body text-[11px] bg-bg-secondary text-text-secondary border border-border-subtle cursor-pointer hover:bg-bg-card transition-all"
                         >
                           Cancel
