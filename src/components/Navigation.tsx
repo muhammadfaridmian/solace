@@ -59,14 +59,23 @@ export function Navigation() {
   };
 
   const handleDeleteAccount = async () => {
+    if (isDeleting) return; // Prevent double-click
     setIsDeleting(true);
-    const { error } = await deleteAccount();
-    setIsDeleting(false);
-    setUserMenuOpen(false);
-    setMobileMenuOpen(false);
-    setShowDeleteConfirm(false);
-    if (!error) {
-      window.location.href = '/login';
+    try {
+      const { error } = await deleteAccount();
+      if (!error) {
+        // Navigate immediately after successful deletion
+        window.location.href = '/login';
+        return; // Don't run any more code after redirect
+      } else {
+        console.error('Delete failed:', error);
+        setIsDeleting(false);
+        setShowDeleteConfirm(false);
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -194,7 +203,7 @@ export function Navigation() {
                     <p className="font-body text-[11px] text-text-muted truncate">{user?.email}</p>
                   </div>
                   <button
-                    onClick={handleSignOut}
+                    onClick={(e) => { e.stopPropagation(); handleSignOut(); }}
                     className="w-full flex items-center gap-[8px] px-[14px] py-[10px] font-body text-[13px] text-text-secondary bg-transparent border-none cursor-pointer hover:bg-bg-secondary transition-colors text-left"
                   >
                     <LogOut size={14} />
@@ -202,7 +211,7 @@ export function Navigation() {
                   </button>
                   {!showDeleteConfirm ? (
                     <button
-                      onClick={() => setShowDeleteConfirm(true)}
+                      onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
                       className="w-full flex items-center gap-[8px] px-[14px] py-[10px] font-body text-[13px] text-semantic-error bg-transparent border-none cursor-pointer hover:bg-semantic-error-bg transition-colors text-left"
                     >
                       <Trash2 size={14} />
@@ -213,14 +222,14 @@ export function Navigation() {
                       <p className="font-body text-[11px] text-text-secondary mb-[8px]">Are you sure? This cannot be undone.</p>
                       <div className="flex gap-[8px]">
                         <button
-                          onClick={handleDeleteAccount}
+                          onClick={(e) => { e.stopPropagation(); handleDeleteAccount(); }}
                           disabled={isDeleting}
                           className="flex-1 py-[6px] rounded-[6px] font-body text-[12px] bg-semantic-error text-white border-none cursor-pointer hover:brightness-110 transition-all disabled:opacity-50"
                         >
                           {isDeleting ? 'Deleting...' : 'Yes, delete'}
                         </button>
                         <button
-                          onClick={() => setShowDeleteConfirm(false)}
+                          onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(false); }}
                           className="flex-1 py-[6px] rounded-[6px] font-body text-[12px] bg-bg-secondary text-text-secondary border border-border-subtle cursor-pointer hover:bg-bg-card transition-all"
                         >
                           Cancel
@@ -293,7 +302,7 @@ export function Navigation() {
                     <p className="font-body text-[10px] text-text-muted truncate">{user?.email}</p>
                   </div>
                   <button
-                    onClick={() => { setMobileMenuOpen(false); handleSignOut(); }}
+                    onClick={(e) => { e.stopPropagation(); handleSignOut(); }}
                     className="w-full flex items-center gap-[8px] px-[12px] py-[10px] font-body text-[12px] text-text-secondary bg-transparent border-none cursor-pointer hover:bg-bg-secondary transition-colors text-left"
                   >
                     <LogOut size={14} />
@@ -301,7 +310,7 @@ export function Navigation() {
                   </button>
                   {!showDeleteConfirm ? (
                     <button
-                      onClick={() => setShowDeleteConfirm(true)}
+                      onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
                       className="w-full flex items-center gap-[8px] px-[12px] py-[10px] font-body text-[12px] text-semantic-error bg-transparent border-none cursor-pointer hover:bg-semantic-error-bg transition-colors text-left"
                     >
                       <Trash2 size={14} />
@@ -312,14 +321,14 @@ export function Navigation() {
                       <p className="font-body text-[10px] text-text-secondary mb-[8px]">Are you sure? This cannot be undone.</p>
                       <div className="flex gap-[6px]">
                         <button
-                          onClick={handleDeleteAccount}
+                          onClick={(e) => { e.stopPropagation(); handleDeleteAccount(); }}
                           disabled={isDeleting}
                           className="flex-1 py-[6px] rounded-[6px] font-body text-[11px] bg-semantic-error text-white border-none cursor-pointer hover:brightness-110 transition-all disabled:opacity-50"
                         >
                           {isDeleting ? 'Deleting...' : 'Yes, delete'}
                         </button>
                         <button
-                          onClick={() => setShowDeleteConfirm(false)}
+                          onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(false); }}
                           className="flex-1 py-[6px] rounded-[6px] font-body text-[11px] bg-bg-secondary text-text-secondary border border-border-subtle cursor-pointer hover:bg-bg-card transition-all"
                         >
                           Cancel
