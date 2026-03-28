@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, PenTool, BookOpen, Heart, Sun, Moon, MessageCircle, LogOut, Trash2 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
@@ -27,7 +27,6 @@ export function Navigation() {
   const mood = useStore((s) => s.mood);
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
-  const navigate = useNavigate();
   const { user, signOut, deleteAccount } = useAuthStore();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
