@@ -34,7 +34,7 @@ export function Navigation() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLLIElement>(null);
 
   // Close menu on outside click
   useEffect(() => {
