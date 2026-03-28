@@ -1,6 +1,6 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, PenTool, BookOpen, Heart, Sun, Moon, MessageCircle, LogOut } from 'lucide-react';
+import { Home, PenTool, BookOpen, Heart, Sun, Moon, MessageCircle, LogOut, Trash2 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { useTheme } from '../hooks/useTheme';
@@ -28,15 +28,24 @@ export function Navigation() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuthStore();
+  const { user, signOut, deleteAccount } = useAuthStore();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   // Close menu on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setUserMenuOpen(false);
+        setShowDeleteConfirm(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target as Node)) {
+        setMobileMenuOpen(false);
+        setShowDeleteConfirm(false);
       }
     };
     document.addEventListener('mousedown', handler);
@@ -47,6 +56,15 @@ export function Navigation() {
     setUserMenuOpen(false);
     await signOut();
     navigate('/login');
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    const { error } = await deleteAccount();
+    setIsDeleting(false);
+    if (!error) {
+      navigate('/login');
+    }
   };
 
   const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User';
@@ -179,6 +197,34 @@ export function Navigation() {
                     <LogOut size={14} />
                     Sign out
                   </button>
+                  {!showDeleteConfirm ? (
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="w-full flex items-center gap-[8px] px-[14px] py-[10px] font-body text-[13px] text-semantic-error bg-transparent border-none cursor-pointer hover:bg-semantic-error-bg transition-colors text-left"
+                    >
+                      <Trash2 size={14} />
+                      Delete account
+                    </button>
+                  ) : (
+                    <div className="px-[14px] py-[10px] border-t border-border-subtle">
+                      <p className="font-body text-[11px] text-text-secondary mb-[8px]">Are you sure? This cannot be undone.</p>
+                      <div className="flex gap-[8px]">
+                        <button
+                          onClick={handleDeleteAccount}
+                          disabled={isDeleting}
+                          className="flex-1 py-[6px] rounded-[6px] font-body text-[12px] bg-semantic-error text-white border-none cursor-pointer hover:brightness-110 transition-all disabled:opacity-50"
+                        >
+                          {isDeleting ? 'Deleting...' : 'Yes, delete'}
+                        </button>
+                        <button
+                          onClick={() => setShowDeleteConfirm(false)}
+                          className="flex-1 py-[6px] rounded-[6px] font-body text-[12px] bg-bg-secondary text-text-secondary border border-border-subtle cursor-pointer hover:bg-bg-card transition-all"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -217,19 +263,70 @@ export function Navigation() {
               </li>
             );
           })}
-          {/* User/sign-out tab */}
-          <li>
+          {/* User account menu */}
+          <li className="relative" ref={mobileMenuRef}>
             <button
-              onClick={handleSignOut}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="flex flex-col items-center gap-[1px] px-[6px] py-[4px] rounded-[8px] transition-colors duration-150 bg-transparent border-none cursor-pointer"
             >
               <span className="w-[18px] h-[18px] rounded-full bg-accent-sage flex items-center justify-center text-white font-display text-[9px]">
                 {displayName.charAt(0).toUpperCase()}
               </span>
               <span className="font-body text-[9px] leading-tight text-text-muted">
-                Out
+                Me
               </span>
             </button>
+            <AnimatePresence>
+              {mobileMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute bottom-[52px] right-0 w-[180px] bg-bg-primary border border-border-subtle rounded-[12px] shadow-lg overflow-hidden z-[10000]"
+                >
+                  <div className="px-[12px] py-[8px] border-b border-border-subtle">
+                    <p className="font-body text-[12px] text-text-primary font-medium truncate">{displayName}</p>
+                    <p className="font-body text-[10px] text-text-muted truncate">{user?.email}</p>
+                  </div>
+                  <button
+                    onClick={() => { setMobileMenuOpen(false); handleSignOut(); }}
+                    className="w-full flex items-center gap-[8px] px-[12px] py-[10px] font-body text-[12px] text-text-secondary bg-transparent border-none cursor-pointer hover:bg-bg-secondary transition-colors text-left"
+                  >
+                    <LogOut size={14} />
+                    Sign out
+                  </button>
+                  {!showDeleteConfirm ? (
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="w-full flex items-center gap-[8px] px-[12px] py-[10px] font-body text-[12px] text-semantic-error bg-transparent border-none cursor-pointer hover:bg-semantic-error-bg transition-colors text-left"
+                    >
+                      <Trash2 size={14} />
+                      Delete account
+                    </button>
+                  ) : (
+                    <div className="px-[12px] py-[10px] border-t border-border-subtle">
+                      <p className="font-body text-[10px] text-text-secondary mb-[8px]">Are you sure? This cannot be undone.</p>
+                      <div className="flex gap-[6px]">
+                        <button
+                          onClick={handleDeleteAccount}
+                          disabled={isDeleting}
+                          className="flex-1 py-[6px] rounded-[6px] font-body text-[11px] bg-semantic-error text-white border-none cursor-pointer hover:brightness-110 transition-all disabled:opacity-50"
+                        >
+                          {isDeleting ? 'Deleting...' : 'Yes, delete'}
+                        </button>
+                        <button
+                          onClick={() => setShowDeleteConfirm(false)}
+                          className="flex-1 py-[6px] rounded-[6px] font-body text-[11px] bg-bg-secondary text-text-secondary border border-border-subtle cursor-pointer hover:bg-bg-card transition-all"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </li>
           {/* Theme toggle tab */}
           <li>
