@@ -30,7 +30,6 @@ export function Navigation() {
   const { user, signOut, deleteAccount } = useAuthStore();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLLIElement>(null);
@@ -40,11 +39,9 @@ export function Navigation() {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setUserMenuOpen(false);
-        setShowDeleteConfirm(false);
       }
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target as Node)) {
         setMobileMenuOpen(false);
-        setShowDeleteConfirm(false);
       }
     };
     document.addEventListener('mousedown', handler);
@@ -59,23 +56,26 @@ export function Navigation() {
   };
 
   const handleDeleteAccount = () => {
-    if (isDeleting) return; // Prevent double-click
-    setIsDeleting(true);
+    if (isDeleting) return;
     
-    // Run delete asynchronously but don't await - let the redirect happen
+    // Use native confirm dialog - this CANNOT be intercepted
+    const confirmed = window.confirm('Are you sure you want to delete your account? This cannot be undone.');
+    if (!confirmed) return;
+    
+    setIsDeleting(true);
+    setUserMenuOpen(false);
+    setMobileMenuOpen(false);
+    
     deleteAccount().then((result) => {
       if (result.error) {
         alert('Delete failed: ' + result.error);
         setIsDeleting(false);
-        setShowDeleteConfirm(false);
       } else {
-        // Force full page reload to login
         window.location.replace('/login');
       }
     }).catch((err) => {
       alert('Delete error: ' + (err instanceof Error ? err.message : 'Unknown error'));
       setIsDeleting(false);
-      setShowDeleteConfirm(false);
     });
   };
 
@@ -209,36 +209,14 @@ export function Navigation() {
                     <LogOut size={14} />
                     Sign out
                   </button>
-                  {!showDeleteConfirm ? (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
-                      className="w-full flex items-center gap-[8px] px-[14px] py-[10px] font-body text-[13px] text-semantic-error bg-transparent border-none cursor-pointer hover:bg-semantic-error-bg transition-colors text-left"
-                    >
-                      <Trash2 size={14} />
-                      Delete account
-                    </button>
-                  ) : (
-                    <div className="px-[14px] py-[10px] border-t border-border-subtle">
-                      <p className="font-body text-[11px] text-text-secondary mb-[8px]">Are you sure? This cannot be undone.</p>
-                      <div className="flex gap-[8px]">
-                        <button
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDeleteAccount(); }}
-                          type="button"
-                          disabled={isDeleting}
-                          className="flex-1 py-[6px] rounded-[6px] font-body text-[12px] bg-semantic-error text-white border-none cursor-pointer hover:brightness-110 transition-all disabled:opacity-50"
-                        >
-                          {isDeleting ? 'Deleting...' : 'Yes, delete'}
-                        </button>
-                        <button
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowDeleteConfirm(false); }}
-                          type="button"
-                          className="flex-1 py-[6px] rounded-[6px] font-body text-[12px] bg-bg-secondary text-text-secondary border border-border-subtle cursor-pointer hover:bg-bg-card transition-all"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleDeleteAccount(); }}
+                    disabled={isDeleting}
+                    className="w-full flex items-center gap-[8px] px-[14px] py-[10px] font-body text-[13px] text-semantic-error bg-transparent border-none cursor-pointer hover:bg-semantic-error-bg transition-colors text-left disabled:opacity-50"
+                  >
+                    <Trash2 size={14} />
+                    {isDeleting ? 'Deleting...' : 'Delete account'}
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -310,36 +288,14 @@ export function Navigation() {
                     <LogOut size={14} />
                     Sign out
                   </button>
-                  {!showDeleteConfirm ? (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
-                      className="w-full flex items-center gap-[8px] px-[12px] py-[10px] font-body text-[12px] text-semantic-error bg-transparent border-none cursor-pointer hover:bg-semantic-error-bg transition-colors text-left"
-                    >
-                      <Trash2 size={14} />
-                      Delete account
-                    </button>
-                  ) : (
-                    <div className="px-[12px] py-[10px] border-t border-border-subtle">
-                      <p className="font-body text-[10px] text-text-secondary mb-[8px]">Are you sure? This cannot be undone.</p>
-                      <div className="flex gap-[6px]">
-                        <button
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDeleteAccount(); }}
-                          type="button"
-                          disabled={isDeleting}
-                          className="flex-1 py-[6px] rounded-[6px] font-body text-[11px] bg-semantic-error text-white border-none cursor-pointer hover:brightness-110 transition-all disabled:opacity-50"
-                        >
-                          {isDeleting ? 'Deleting...' : 'Yes, delete'}
-                        </button>
-                        <button
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowDeleteConfirm(false); }}
-                          type="button"
-                          className="flex-1 py-[6px] rounded-[6px] font-body text-[11px] bg-bg-secondary text-text-secondary border border-border-subtle cursor-pointer hover:bg-bg-card transition-all"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleDeleteAccount(); }}
+                    disabled={isDeleting}
+                    className="w-full flex items-center gap-[8px] px-[12px] py-[10px] font-body text-[12px] text-semantic-error bg-transparent border-none cursor-pointer hover:bg-semantic-error-bg transition-colors text-left disabled:opacity-50"
+                  >
+                    <Trash2 size={14} />
+                    {isDeleting ? 'Deleting...' : 'Delete account'}
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
