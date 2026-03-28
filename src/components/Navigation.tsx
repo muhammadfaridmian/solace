@@ -61,19 +61,23 @@ export function Navigation() {
   const handleDeleteAccount = async () => {
     if (isDeleting) return; // Prevent double-click
     setIsDeleting(true);
+    
+    // Close menus first to prevent UI issues
+    setUserMenuOpen(false);
+    setMobileMenuOpen(false);
+    
     try {
-      const { error } = await deleteAccount();
-      if (!error) {
-        // Navigate immediately after successful deletion
-        window.location.href = '/login';
-        return; // Don't run any more code after redirect
-      } else {
-        console.error('Delete failed:', error);
+      const result = await deleteAccount();
+      if (result.error) {
+        alert('Delete failed: ' + result.error);
         setIsDeleting(false);
         setShowDeleteConfirm(false);
+        return;
       }
+      // Force full page reload to login
+      window.location.replace('/login');
     } catch (err) {
-      console.error('Delete error:', err);
+      alert('Delete error: ' + (err instanceof Error ? err.message : 'Unknown error'));
       setIsDeleting(false);
       setShowDeleteConfirm(false);
     }
